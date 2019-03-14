@@ -38,13 +38,10 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
-
-app.config.from_envvar('DATABASE_URI')
-app.config.from_envvar('SECRET_KEY')
-
-app.config['SQLALCHEMY_DATABASE_URI'] = app.config["DATABASE_URI"]
-app.secret_key = app.config["SECRET_KEY"]
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URI"]
+app.secret_key = os.environ["SECRET_KEY"]
 #Session(app)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)

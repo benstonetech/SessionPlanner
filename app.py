@@ -44,8 +44,8 @@ test = app.config.from_object(os.environ['DATABASE_URL'])
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 # app.secret_key = os.environ.get('SECRET_KEY')
 
-print(test)
-app.config['SQLALCHEMY_DATABASE_URI'] = s3
+print(str(test))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 #app.secret_key = os.environ.get('SECRET_KEY')
 # test= os.environ.get('S3_KEY')
 #Session(app)

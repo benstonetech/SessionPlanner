@@ -19,6 +19,7 @@ import datetime
 import psycopg2
 
 
+
 # Configure application
 app = Flask(__name__)
 
@@ -38,9 +39,12 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ["DATABASE_URI"]
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 app.secret_key = os.environ["SECRET_KEY"]
+
 #Session(app)
+print (s3key)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

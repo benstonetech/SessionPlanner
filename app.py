@@ -39,8 +39,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
-app.config.from_envvar('APPLICATION_SETTINGS')
-
 app.config.from_envvar('DATABASE_URI')
 app.config.from_envvar('SECRET_KEY')
 

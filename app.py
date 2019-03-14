@@ -41,6 +41,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 app.config.from_envvar('APPLICATION_SETTINGS')
 
+app.config.from_envvar('DATABASE_URI')
+app.config.from_envvar('SECRET_KEY')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = app.config["DATABASE_URI"]
 app.secret_key = app.config["SECRET_KEY"]
 #Session(app)

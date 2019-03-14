@@ -44,7 +44,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
 app.secret_key = os.environ["SECRET_KEY"]
 
 #Session(app)
-print (s3key)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

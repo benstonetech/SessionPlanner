@@ -18,6 +18,7 @@ from sqlalchemy_serializer import SerializerMixin
 import datetime
 import psycopg2
 
+from boto.s3.connection import S3Connection
 
 
 # Configure application
@@ -40,11 +41,19 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('DATABASE_URI')
-app.secret_key = os.environ.get('SECRET_KEY')
-test= os.environ.get('S3_KEY')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+# app.secret_key = os.environ.get('SECRET_KEY')
+
+s3 = S3Connection(os.environ['DATABASE_URI'])
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = s3.DATABASE_URI
+#app.secret_key = os.environ.get('SECRET_KEY')
+# test= os.environ.get('S3_KEY')
 #Session(app)
-g.test = test
+
+print(app.secret_key)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
@@ -105,7 +114,7 @@ def index():
     c_user_id = request.cookies.get('c_user_id')
 
     g.c_logged_in = c_logged_in
-
+    
     return render_template("index.html", rule=request.url_rule)
 
 @app.route("/anon")

@@ -1,0 +1,640 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Session Planner
+{% endblock %}
+
+{% block main %}
+
+    <script type="text/javascript">
+
+    </script>
+    <div class="container" id="session-container">
+
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-exercises" role="tabpanel" aria-labelledby="pills-home-tab">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2">Search</span>
+                </div>
+                <input type="text" id="SearchInput" class="form-control" onkeyup="searchExercises()" placeholder="Exercise name" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                
+            </div>
+            <ul class="list-group list-group-flush" id="ExercisesList">
+                    <li class="list-group-item"> {{ exercises[0].ename }}</li>
+            </ul>
+            <div class="list-group">
+                <li class="list-group-item" id="NoResultsMessage" style="display:none" > Search returned no results</li>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-customise" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <ul class="list-group" id="selectedExercisesList">
+
+                <li class="list-group-item">There are no exercises in the current session </li>
+
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="pills-finalise" role="tabpanel" aria-labelledby="pills-contact-tab">
+            <!--SessionName: <input data-tw-bind="sessionName" type="text"> <span data-tw-bind="sessionName"></span>-->
+            <div class="d-flex justify-content-center">
+            <div class="text-container ">
+                <div><label>Session Title</label>
+                <input class="form-control" id="SessionTitle" placeholder="" />
+
+
+                </div>
+
+                <div id="aimsBox" style="padding-top: 10px">
+                    <div id="aim1group">
+                        <label id="basic-addon3">Aim 1</label>
+                        <div class="aim-group">
+                            <input type="text" class="form-control aim-input" id="aim1" name="aim1" >
+                            <button class="btn btn-outline-secondary aim-button" type="button" onClick="deleteAim(1)">x</button>
+                        </div>
+                    </div>
+                    <div id="aim2group" style="display: none">
+                        <label id="basic-addon3">Aim 2</label>
+                        <div class="aim-group">
+                            <input type="text" class="form-control aim-input" id="aim2" name="aim2" >
+                            <button class="btn btn-outline-secondary" type="button" onClick="deleteAim(2)">x</button>
+                        </div>
+                    </div>
+                    <div id="aim3group" style="display: none">
+                        <label id="basic-addon3">Aim 3</label>
+                        <div class="aim-group">
+                            <input type="text" class="form-control aim-input" id="aim3" name="aim3" >
+                            <button class="btn btn-outline-secondary" type="button" onClick="deleteAim(3)">x</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="btn btn-success btn-block" onclick="addAim()" style="text-align: center"> Add  </div>
+                <br />
+                <div class="btn btn-secondary btn-block" onclick="OpenPDF()"> Build</div>
+            </div>
+        </div>
+            </div>
+
+
+    </div>
+
+    <div class=" fixed-bottom navbar-light text-center bg-light small text-muted">
+        <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-exercises" role="tab" aria-controls="pills-home" aria-selected="true">
+                    <div class="tab-link-text d-none d-sm-none d-md-block d-lg-block d-xl-block" > Exercises </div>
+                    <div class="tab-link-icon d-block d-sm-block d-md-none d-lg-none d-xl-none " ><i class="material-icons">fitness_center</i></div>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-customise" role="tab" aria-controls="pills-profile" aria-selected="false">
+                    <div class="tab-link-text d-none d-sm-none d-md-block d-lg-block d-xl-block" > Customise </div>
+                    <div class="tab-link-icon d-block d-sm-block d-md-none d-lg-none d-xl-none " ><i class="material-icons">settings</i></div>
+
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-finalise" role="tab" aria-controls="pills-contact" aria-selected="false">
+                    <div class="tab-link-text d-none d-sm-none d-md-block d-lg-block d-xl-block" > Finalise </div>
+                    <div class="tab-link-icon d-block d-sm-block d-md-none d-lg-none d-xl-none " ><i class="material-icons">send</i></div>
+                </a>
+            </li>
+
+
+        </ul>
+    </div>
+
+    </div>
+
+
+<script type="text/javascript">
+
+        var Exercises = [];
+        var SessionExercises = [];
+
+        var Aims = ["","HARD CODED AIM",""];
+        var numberOfAims = 1;
+
+        Exercises = {{exercises|tojson}}
+        
+        console.log(Exercises)
+        var i = 0;
+       
+        Exercises.forEach(function(ex){
+            ex.index = i;
+            i++;
+        })
+
+        var str = '';
+
+        Exercises.forEach(function(ex){
+            str += '<li  class="list-group-item" id="ExerciseListItem'+ex.index+'"><a> ' +ex.ename + '</a><span style="float:right"><i onclick="showDetail('+ ex.index +')" class="material-icons">search</i><i onclick="addExercise(' + ex.index + ') "class="material-icons">add</i></span></li>';
+        });
+
+        document.getElementById("ExercisesList").innerHTML = str;
+
+        function searchExercises(){
+
+            var input, filter, ul, li, a, i, txtValue;
+                  input = document.getElementById('SearchInput');
+                  filter = input.value.toUpperCase();
+                  ul = document.getElementById("ExercisesList");
+                  li = ul.getElementsByTagName('li');
+
+                console.log(li.length)
+                  // Loop through all list items, and hide those who don't match the search query
+
+                  var nResults = 0
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("a")[0];
+                    txtValue = a.textContent || a.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                      li[i].style.display = "";
+                      nResults++
+                    } else {
+                      li[i].style.display = "none";
+                    }
+                }
+                var NoResultsMessage = document.getElementById('NoResultsMessage')
+                if (nResults > 0){
+                    NoResultsMessage.style.display = "none";
+                } else {
+                    NoResultsMessage.style.display = '';
+                }
+
+        }
+
+        function reDrawSessionExercises(){
+            var SessionExercisesList = document.getElementById("selectedExercisesList")
+            SessionExercisesList.innerHTML = ''
+            console.log(SessionExercises)
+
+            var i = 0;
+
+            if (SessionExercises.length < 1){
+                SessionExercisesList.innerHTML = '<li class="list-group-item">There are no exercises in the current session </li>'
+            }
+            else {
+                SessionExercises.forEach(function(ex){
+                    SessionExercisesList.innerHTML += '<div class="card" style="margin-top:6px"> <div class="card-header" id="ExerciseItem'+i+'"> ' + ex.ename + '<span style="float:right"><i class="material-icons" onclick="moveExerciseUp('+ i + ')">arrow_upward</i><i class="material-icons" onclick="moveExerciseDown('+ i + ')">arrow_downward</i><i onclick="deleteExercise('+ i + ')" class="material-icons">delete_outline</i></span></div><div class="card-body" id="ExerciseItem'+i+'"> <div class="row"><div class="col-md">Sets: <div class="btn btn-primary btn-sm" onclick="decreaseSets('+i+')">-</div><span id="Sets'+i+'">'+ ex.esets+'</span><div class="btn btn-primary btn-sm" onclick="increaseSets('+i+')">+</div></div><div class="col-md">Reps: <div class="btn btn-primary btn-sm" onclick="decreaseReps('+i+')">-</div><span id="Reps'+i+'">'+ ex.ereps+'</span><div class="btn btn-primary btn-sm" onclick="increaseReps('+i+')">+</div></div></div> </div></div>'
+                    i++;
+                })
+            }
+
+
+
+        }
+
+
+        function startNewSession(){
+            SessionExercises = [];
+
+            reDrawSessionExercises();
+
+            $('#NewSessionModal').modal('hide')
+
+            for (var i = 0; i < Exercises.length; i++){
+                var ExerciseListItem = document.getElementById('ExerciseListItem'+i)
+                ExerciseListItem.className = "list-group-item"
+            }
+
+            // Delete Title
+            $('#SessionTitle').val('')
+
+            // Delete Aims
+            var aim1 = document.getElementById("aim1group")
+            aim1.style.display = 'block'
+            var aim2 = document.getElementById("aim2group")
+            aim2.style.display = 'none'
+            var aim3 = document.getElementById("aim3group")
+            aim3.style.display = 'none'
+
+            $('#aim1').val('')
+            $('#aim2').val('')
+            $('#aim3').val('')
+
+            numberOfAims = 1
+        }
+        function addExercise(ind){
+            // Add to the array
+
+            SessionExercises.push(Exercises[ind]);
+
+            var ExerciseListItem = document.getElementById('ExerciseListItem'+ind)
+            ExerciseListItem.className = "list-group-item list-group-item-success"
+
+            var l = this.SessionExercises.length;
+
+            // Add to the view
+            reDrawSessionExercises()
+            $('#detail-modal').modal('hide')
+        }
+
+        function moveExerciseUp(index){
+
+            if (index > 0) {
+                var temp = SessionExercises[index-1];
+
+                SessionExercises[index-1] = SessionExercises[index];
+                SessionExercises[index] = temp;
+
+                reDrawSessionExercises();
+            }
+        }
+
+        function moveExerciseDown(index){
+
+            if (index < SessionExercises.length - 1){
+                var temp = SessionExercises[index+1];
+
+                SessionExercises[index+1] = SessionExercises[index];
+                SessionExercises[index] = temp;
+
+                reDrawSessionExercises();
+            }
+
+        }
+
+        function deleteExercise(myind){
+
+            console.log("index: " + myind)
+            temp = SessionExercises[myind]
+
+            if (SessionExercises.length > 1){
+                SessionExercises.splice(myind,1);
+                console.log(SessionExercises)
+            } else {
+                SessionExercises = [];
+                console.log(SessionExercises)
+            }
+
+            var lastExercise = true
+            var id = temp.index
+            
+            SessionExercises.forEach(function(ex){
+                if (ex.ename == temp.ename){
+                    
+                    lastExercise = false
+                }
+            })
+            console.log(id)
+            if (lastExercise == true){
+                //ex.eid
+                // Take off green highlight
+                var ExerciseListItem = document.getElementById('ExerciseListItem'+id)
+                ExerciseListItem.className = "list-group-item"
+            }
+            reDrawSessionExercises();
+        }
+
+        function increaseReps(ind){
+            SessionExercises[ind].ereps += 1;
+
+            var reps = document.getElementById('Reps'+ind)
+            reps.innerHTML = SessionExercises[ind].ereps
+        }
+
+        function decreaseReps(ind){
+
+            if ( SessionExercises[ind].ereps > 1){
+                SessionExercises[ind].ereps -= 1;
+
+                var reps = document.getElementById('Reps'+ind)
+                reps.innerHTML = SessionExercises[ind].ereps
+            }
+        }
+
+        function increaseSets(ind){
+            SessionExercises[ind].esets += 1;
+
+            var sets = document.getElementById('Sets'+ind)
+            sets.innerHTML = SessionExercises[ind].esets
+        }
+        function decreaseSets(ind){
+
+            if ( SessionExercises[ind].esets > 1){
+                SessionExercises[ind].esets -= 1;
+
+                var sets = document.getElementById('Sets'+ind)
+                sets.innerHTML = SessionExercises[ind].esets
+            }
+        }
+
+        function showDetail(y){
+            var mtitle = document.getElementById("detail-modal-title")
+            var mbody = document.getElementById("detail-modal-body")
+            var mfooter = document.getElementById("detail-modal-footer")
+
+            mtitle.innerHTML = ''
+            mtitle.innerHTML = '<h3>'+ Exercises[y].ename +'</h3>'
+
+            mbody.innerHTML = ''
+            mbody.innerHTML = '<p>' + Exercises[y].edesc + '</p>'
+
+            mfooter.innerHTML = '<div class="btn btn-success btn-block" onclick="addExercise('+y+')"> Add to session</div>'
+
+            $('#detail-modal').modal('show')
+        }
+
+        function addAim(){
+
+            if (numberOfAims < 3){
+                numberOfAims += 1;
+
+                if (numberOfAims ==1)
+                {
+                    var aim1 = document.getElementById("aim1group")
+                    aim1.style.display = 'block'
+
+                    // Hide the no aims message
+                }
+                if (numberOfAims ==2)
+                {
+                    var aim2 = document.getElementById("aim2group")
+                    aim2.style.display = 'block'
+                }
+                if (numberOfAims ==3)
+                {
+                    var aim3 = document.getElementById("aim3group")
+                    aim3.style.display = 'block'
+                }
+
+            }
+            else
+            {
+                $('#aim-max-modal').modal('show')
+            }
+        }
+
+        function deleteAim(aim){
+            // Move the array
+            if (aim == 1){
+                if (numberOfAims == 1){
+                    var a1 = document.getElementById("aim1")
+                    var aim1 = document.getElementById("aim1group")
+
+                    a1.value = '';
+                    aim1.style.display = 'none'
+                    numberOfAims = 0;
+                }
+                else if (numberOfAims > 1)
+                {
+                    var a1 = document.getElementById("aim1")
+                    var a2 = document.getElementById("aim2")
+                    var a3 = document.getElementById("aim3")
+
+                    a1.value = a2.value;
+                    a2.value = a3.value;
+                    a3.value = '';
+
+                    if (numberOfAims == 2)
+                    {
+                        var aim2 = document.getElementById("aim2group")
+                        aim2.style.display = 'none'
+
+                        numberOfAims = 1;
+                    }
+                    if (numberOfAims == 3)
+                    {
+                        var aim3 = document.getElementById("aim3group")
+                        aim3.style.display = 'none'
+
+                        numberOfAims = 2;
+                    }
+
+                }
+            }
+            else if (aim == 2)
+            {
+                if (numberOfAims == 2){
+
+                    var a2 = document.getElementById("aim2")
+                    a2.value = '';
+
+                    var aim2 = document.getElementById("aim2group")
+                    aim2.style.display = 'none'
+
+                    numberOfAims = 1;
+
+                }
+                else
+                {
+                    var a2 = document.getElementById("aim2")
+                    var a3 = document.getElementById("aim3")
+                    a2.value = a3.value;
+                    a3.value = '';
+
+
+                    var aim3 = document.getElementById("aim3group")
+                    aim3.style.display = 'none'
+
+                    numberOfAims = 2;
+
+                }
+            }
+            else if (aim == 3){
+                var a3 = document.getElementById("aim3")
+                a3.value = '';
+
+                var aim3 = document.getElementById("aim3group")
+                aim3.style.display = 'none'
+
+                numberOfAims = 2;
+            }
+            // Reset the view
+        }
+
+        function redrawAims(){
+
+
+        }
+
+        function OpenPDF(){
+            // playground requires you to assign document definition to a variable called dd
+            var fonts = {
+            	Roboto: {
+            		normal: 'fonts/Roboto-Regular.ttf',
+            		bold: 'fonts/Roboto-Medium.ttf',
+            		italics: 'fonts/Roboto-Italic.ttf',
+            		bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+            	}
+            };
+
+            // Set the initial layout
+            var dd = {
+                styles:{
+
+                    header: {
+                        fontSize : 15,
+                        alignment: 'center',
+                        bold : true,
+                        margin: [0, 10]
+                    },
+                    subheader : {
+                        margin : [0, 10]
+                    }
+
+                },
+            	content: [
+            		{ text: 'Session Exercises', style: 'header'},
+            		{
+            		    text: '',
+            		},
+                    {
+                        text: 'Session Aims', style :'subheader'
+
+                    },
+                    {
+                        ol : [],
+
+                    },
+            		{
+            		    layout: 'lightHorizontalLines', // optional
+                        style: 'subheader',
+                        table: {
+                            // headers are automatically repeated if the table spans over multiple pages
+                            // you can declare how many rows should be treated as headers
+                            headerRows: 1,
+                            widths: [ 'auto', '*', 'auto' ],
+
+                            body: [
+                              [ 'Name', 'Description', 'Sets*Reps'],
+
+                            ]
+                         }
+            		}
+                ]
+            }
+
+            var title = document.getElementById("SessionTitle").value
+
+            dd.content[1].text = 'Title: ' + title
+            var aim1 = document.getElementById("aim1").value
+            var aim2 = document.getElementById("aim2").value
+            var aim3 = document.getElementById("aim3").value
+
+            Aims[0] = aim1;
+            Aims[1] = aim2;
+            Aims[2] = aim3;
+
+            Aims.forEach(function(aim){
+                if (aim != ""){
+                    dd.content[3].ol.push(aim)
+                }
+            })
+
+            // // Add The exercises
+            SessionExercises.forEach(function(ex){
+              var temp = [ex.ename,ex.edesc,ex.esets+' x '+ex.ereps]
+
+              dd.content[4].table.body.push(temp)
+            })
+
+            pdfMake.createPdf(dd).open();
+
+        }
+
+
+            var elements = document.querySelectorAll('[data-tw-bind]'),scope = {};
+
+            elements.forEach(function(element){
+
+                if (element.type === 'text'){
+                    var propToBind = element.getAttribute('data-tw-bind');
+                    addScopeProp(propToBind);
+
+                    element.onkeyup = function(){
+                        scope[propToBind] = element.value
+                    }
+                }
+
+                function addScopeProp(prop){
+                    if (!scope.hasOwnProperty(prop)){
+
+                        var value;
+
+                        Object.defineProperty(scope,prop,{
+                            set: function(newValue){
+                                value = newValue;
+                                elements.forEach(function(element){
+                                    if (element.getAttribute('data-tw-bind')===prop)
+                                    {
+                                        if (element.type && (element.type === 'text'))
+                                        {
+                                            element.value = newValue;
+                                        }
+                                        else if (!element.type)
+                                        {
+                                            element.innerHTML = newValue
+                                        }
+
+                                    }
+                                })
+                            },
+                            get: function(){
+                                return value
+                            },
+                            enumerable:true
+                        })
+                    }
+                }
+            })
+
+
+
+</script>
+<script type="text/javascript"  >
+
+
+
+</script>
+
+
+<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detail-modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail-modal-body">
+
+      </div>
+        <div class="modal-footer" id="detail-modal-footer">
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="aim-max-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true" style="padding : 0px">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detail-modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail-modal-body">
+        <p> Maximum number of aims reached</p>
+      </div>
+        <div class="modal-footer" id="detail-modal-footer">
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

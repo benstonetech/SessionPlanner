@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin
+{% endblock %}
+
+{% block main %}
+
+<form action="/createexercise" method="post" style="padding-top : 80px">
+  <div class="form-group">
+    <label for="exercise-name">Exercise Name</label>
+    <input type="text" class="form-control" id="exercise-name" name="ename" placeholder="Standing Bicep Curl">
+  </div>
+  <div class="form-group">
+    <label for="exercise-description">Exercise Description</label>
+    <input type="text" class="form-control" id="exercise-description" name="edesc" placeholder="A detailed description of the exercise">
+  </div>
+  <div class="form-group">
+    <label for="exercise-sets">Exercise Sets</label>
+    <input type="number" class="form-control" id="exercise-sets" name="esets" >
+  </div>
+  <div class="form-group">
+    <label for="exercise-reptype">Exercise Rep Type</label>
+    <input type="text" class="form-control" id="exercise-reptype" name="ereptype" placeholder="Reps or Time">
+  </div>
+  <div class="form-group">
+    <label for="exercise-description">Exercise Reps</label>
+    <input type="number" class="form-control" id="exercise-reps" name="ereps">
+  </div>
+
+
+  <button type="submit" class="btn btn-primary btn-block">Add Exercise</button>
+</form>
+
+{% endblock %}

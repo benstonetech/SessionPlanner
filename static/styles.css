@@ -1,0 +1,116 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    /*font-size: xx-large;*/
+}
+
+/* colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+.container.tCentre {
+    text-align: center;
+}
+
+.footer-text{
+    padding-top : 5px;
+}
+
+.list-button {
+    cursor: pointer;
+
+}
+.aim-group {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 10px;
+}
+.aim-label {
+    width: 20%;
+}
+.aim-input {
+    flex-grow:1;
+    margin-right: 5px;
+}
+.text-container{
+    width: 60%;
+
+}
+i {
+    cursor:pointer;
+}
+
+.main-container {
+    height: 100vh;
+    display : flex;
+    flex-direction: column;
+    background-color: #F9F9F9;
+}
+#session-container {
+    margin-top : 100px;
+    margin-bottom : 100px;
+}
+.login-container {
+    flex-grow:1;
+}
+.footer {
+    background-color: #F9F9F9;
+    color: black;
+    text-align: center;
+}
+#homepage-card {
+    min-width : 300px;
+    margin : 25px;
+}
+@media (max-width: 768px) {
+    .text-container {
+        width:100%;
+        text-align : center;
+    }
+}
+/*tab-link-text*/
+/*    .tab-link-text {*/
+/*        display: block;*/
+/*    }*/
+/*    .tab-link-icon {*/
+/*        display: none;*/
+/*    }*/
+/*}*/

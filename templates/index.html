@@ -1,0 +1,143 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Session Planner
+{% endblock %}
+
+{% block main %}
+  <div class="main-container">
+    <div class="login-container d-flex justify-content-center align-items-center">
+
+      {% if g.c_logged_in == 'True' %}
+      <div class="container">
+
+          <div class="row">
+              
+                  <div class="col-md-6">
+                      <div class="card" id="homepage-card">
+                        <div class="card-body">
+                          <p> Start a new session </p>
+                          <a class="btn btn-primary btn-block" href="/session"> Start</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="card" id="homepage-card">
+                        <div class="card-body">
+                          <p> Load a template </p>
+                          <div class="btn btn-secondary btn-block" onClick="startLoadTemplate()"> Load</div>
+                        </div>
+                      </div>
+                    </div>
+            
+              
+          </div>
+
+        </div>
+      {% else %}
+        
+        <div class="text-container ">
+            <div class="card" style="margin: 10px">
+              <div class="container" style="padding:30px; ">
+                <h1> Session Planner</h1>
+    
+                <form action="/login" method="post">
+                  <div class="form-group">
+                    <input autocomplete="off" autofocus class="form-control" name="email" placeholder="example@domain.com" type="email" required>
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" name="password" placeholder="Password" type="password" required>
+                  </div>
+    
+                  <button class="btn btn-primary btn-block" type="submit">Log In</button>
+                  <hr>
+    
+                </form>
+                <br />
+    
+                <p> New to Session Planner <span class="btn btn-primary" data-toggle="modal" data-target="#register-modal"> Register</span></p>
+                <a class="btn btn-outline-secondary btn-block" href="/anon"> Guest Account</a>
+              </div>
+            </div>
+          </div>
+
+
+      {% endif %}
+
+
+
+    </div>
+    <div class="footer">
+      <div class="container">
+        <p> Produced by Ben Stone</p>
+      </div>
+
+    </div>
+  </div>
+
+
+
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Register New Account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/register" method="post">
+          <div class="form-group">
+            <label for="name-input">Name</label>
+            <input type="text" class="form-control" id="name-input" name="name" placeholder="Joe Bloggs" required>
+          </div>
+          <div class="form-group">
+            <label for="email-input">Email</label>
+            <input type="email" class="form-control" id="email-input" name="email" placeholder="example@domain.com" required>
+          </div>
+          <div class="form-group">
+            <label for="password-input">Password</label>
+            <input type="password" class="form-control" id="password-input" name="password" placeholder="Password" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm-password-input">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm-password-input" name="confirmation" placeholder="Password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="LoadTemplateModal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detail-modal-title">Load a template</h5>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail-modal-body">
+      <p> Load a template feature is coming soon!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal" aria-label="Close">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function startLoadTemplate(){
+            $('#LoadTemplateModal').modal('show')
+  }
+</script>
+{% endblock %}

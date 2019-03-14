@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: SQLAlchemy-serializer
+Version: 1.1
+Summary: Mixin for SQLAlchemy-models serialization without pain
+Home-page: https://github.com/n0nSmoker/SQLAlchemy-serializer.git
+Author: Y-Bro
+Author-email: UNKNOWN
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: sqlalchemy,serialize,to_dict,JSON
+Platform: UNKNOWN

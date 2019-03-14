@@ -44,7 +44,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 # app.secret_key = os.environ.get('SECRET_KEY')
 
-s3 = S3Connection(os.environ['DATABASE_URI'])
+s3 = S3Connection(os.environ['DATABASE_URL'])
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = s3

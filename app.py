@@ -40,13 +40,11 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
-
+test = app.config.from_object(os.environ['DATABASE_URL'])
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 # app.secret_key = os.environ.get('SECRET_KEY')
 
-s3 = S3Connection(os.environ['DATABASE_URL'])
-
-
+print(test)
 app.config['SQLALCHEMY_DATABASE_URI'] = s3
 #app.secret_key = os.environ.get('SECRET_KEY')
 # test= os.environ.get('S3_KEY')

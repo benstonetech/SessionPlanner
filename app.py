@@ -40,11 +40,11 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI")
-app.secret_key = os.environ["SECRET_KEY"]
-
+app.config['SQLALCHEMY_DATABASE_URI'] =  os.environ.get('DATABASE_URI')
+app.secret_key = os.environ.get('SECRET_KEY')
+test= os.environ.get('S3_KEY')
 #Session(app)
-
+g.test = test
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
